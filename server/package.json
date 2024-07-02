@@ -1,0 +1,24 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "cors": "^2.8.5",
+    "express": "^4.19.1",
+    "express-async-await": "^1.1.0",
+    "highcharts": "^11.4.0",
+    "highcharts-angular": "^4.0.0",
+    "https-proxy-agent": "^7.0.4",
+    "mongodb": "^6.5.0",
+    "node-fetch": "^2.7.0",
+    "node-fetch2": "^1.6.3"
+  }
+}
