@@ -1,0 +1,47 @@
+<div class="container-fluid">
+  <div class="row">
+    <!-- Column for Metadata and Price -->
+    <div class="col-md-7">
+      <!-- Metadata section -->
+      
+
+      <!-- Latest Price section -->
+      <div *ngIf="latestPrice" class="mb-4">
+        <div><strong>High Price:</strong> {{ latestPrice.h }}</div>
+        <div><strong>Low Price:</strong> {{ latestPrice.l }}</div>
+        <div><strong>Open Price:</strong> {{ latestPrice.o }}</div>
+        <div><strong>Prev. Close:</strong> {{ latestPrice.pc }}</div>
+      </div>
+
+      <div *ngIf="metadata" class="mb-4">
+        <h3>About the company</h3>
+        <div><strong>IPO Start Date:</strong> {{ metadata.ipo }}</div>
+        <div><strong>Industry:</strong> {{ metadata.finnhubIndustry }}</div>
+        <div><strong>Webpage:</strong> <a href="{{ metadata.weburl }}" target="_blank">{{ metadata.weburl }}</a></div>
+      </div>
+      <!-- Peers section -->
+      <div *ngIf="peers" class="mb-4">
+        <h3>Company peers:</h3>
+        <div class="d-flex flex-row flex-wrap">
+            <div *ngFor="let peer of peers; let isLast=last" class="me-2">
+                <a href="javascript:void(0)" (click)="onPeerClick(peer)">{{ peer }}</a>{{isLast ? '' : ','}}
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Column for Chart -->
+    <div class="col-md-5">
+      <div *ngIf="chart" class="chart-container">
+        <highcharts-chart 
+          [Highcharts]="Highcharts"
+          [options]="chartOptions" 
+          style="width: 100%; height: 400px; display: block;">
+        </highcharts-chart>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

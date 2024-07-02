@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="row">
+    <h3>My Watchlist</h3>
+    <div *ngIf="isLoadingWatchlist" class="d-flex justify-content-center large-spinner">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div *ngIf="!isLoadingWatchlist && watchlist.length === 0" class="alert alert-warning text-center w-100" role="alert">
+      Currently you don't have any stock in your watchlist.
+    </div>    
+    <div *ngFor="let tickerItem of tickerData" class="col-12">
+      <div class="card mb-3">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <div class="d-flex flex-column" *ngIf="tickerItem">
+            <!-- Ticker and company name on the left -->
+            <h5 class="card-title mb-0">{{ tickerItem.ticker }}</h5>
+            <small class="text-muted" *ngIf="tickerItem.metadata">{{ tickerItem.metadata.name }}</small>
+          </div>
+          <div class="text-end" *ngIf="tickerItem.latestPrice">
+            <!-- Current price and change on the right -->
+            <h5 class="card-title mb-0 {{ tickerItem.latestPrice.d < 0 ? 'text-danger' : 'text-success' }}">{{ tickerItem.latestPrice.c }}</h5>
+            <small class="{{ tickerItem.latestPrice.d < 0 ? 'text-danger' : 'text-success' }}">
+              {{ tickerItem.latestPrice.d }} ({{ tickerItem.latestPrice.dp }}%)
+            </small>
+          </div>
+          <!-- Delete button -->
+          <button (click)="deleteTicker(tickerItem.ticker)" class="btn position-absolute top-0 start-0 btn-sm">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- <div *ngIf="!isLoadingWatchlist && (!watchlist || watchlist.length === 0)" class="alert alert-warning text-center w-100" role="alert">
+      Currently you don't have any stock in your watchlist.
+    </div> -->
+    
+  </div>
+</div>
+

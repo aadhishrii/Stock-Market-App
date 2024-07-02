@@ -1,0 +1,217 @@
+<div class="d-flex flex-column min-vh-100">
+
+  <div class="container my-4">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <h2 class="text-center mb-4">STOCK SEARCH</h2>
+        <form [formGroup]="myForm" class="input-group">
+          
+          <input type="text" id="searchInput" class="form-control rounded-pill" placeholder="Enter stock ticker symbol"
+            formControlName="ticker" aria-label="Stock search">
+            <!-- <mat-form-field class="example-full-width form-control rounded-pill" appearance="fill">
+              <input type="text"
+              formControlName="ticker" aria-label="Stock search"
+                     placeholder="Enter stock ticker symbol"
+                     id="searchInput"
+                     matInput
+                     [formControl]="searchControl"
+                     [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptions" [value]="option.symbol">
+                  {{ option.symbol }} - {{ option.name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field> -->
+            
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary border-left-0 rounded-pill" type="submit" (click)="onSearch()">
+              <i class="bi bi-search"></i>
+            </button>
+            <button class="btn btn-outline-secondary border-left-0 rounded-pill" type="button" (click)="clearSearch()">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+  <div *ngIf="isLoading" class="d-flex justify-content-center large-spinner">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!tickerValid" class="alert alert-danger text-center w-100" role="alert" style="margin-top: 10px;">
+    No data found. Please enter a valid Ticker.
+  </div> 
+
+  <div *ngIf="tickerValid">
+    <div class="container my-4">
+      <div class="row justify-content-center">
+        <div class="col-12">
+   
+          <!-- Metadata and latest price section -->
+          <div *ngIf="metadata" class="d-flex justify-content-between align-items-center mb-4">
+            
+            <!-- Left section for name, exchange, ticker, star, and buttons -->
+            <div *ngIf="metadata" class="mx-0" style="margin-left: -5px; margin-right: -5px;">
+              <h2>
+                {{ metadata.ticker }}
+                <span class="star-icon" [ngClass]="{'yellow-star': isInWishlist || metadata.isWatchlist}" (click)="toggleWishlist(metadata.ticker)">&#9733;</span>
+              </h2>
+              <h5>{{ metadata.name }}</h5>
+              <p>{{ metadata.exchange }}</p>
+              <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="fetchWalletBalance()">Buy</button>
+              <button type="button" *ngIf="showSellButton" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" (click)="fetchWalletBalance()">Sell</button>
+            </div>
+            
+            <!-- Center section for the logo -->
+            <div class="mx-0" style="margin-left: -20px; margin-right: -20px;">
+              <img src="{{ metadata.logo }}" alt="{{ metadata.name }}" class="img-fluid" style="max-width: 20%; margin-left: 30%;"> <!-- Adjust max-width as needed -->
+            </div>
+    
+            <!-- Right section for latest price and date -->
+            <!-- <div>
+              <h3 class="text-success">{{ latestPrice.c }} </h3>
+              <h4 class="text-success"> {{ latestPrice.d }} <span class="text-secondary">({{ latestPrice.dp }}%)</span></h4>
+              <p class="text-secondary">{{ latestPrice.t * 1000 | date:'yyyy-MM-dd HH:mm:ss' }}</p>
+            </div> -->
+
+            <div class="mx-0" style="margin-left: -5px; margin-right: -5px;">
+              <h3 [ngClass]="{'text-success': latestPrice.d > 0, 'text-danger': latestPrice.d < 0}" *ngIf="latestPrice">
+                {{ latestPrice.c }} 
+              </h3>
+              <h4 *ngIf="latestPrice" [ngClass]="{'text-success': latestPrice.d > 0, 'text-danger': latestPrice.d < 0}">
+                <span *ngIf="latestPrice.d > 0" class="arrow-up"></span>
+                <span *ngIf="latestPrice.d < 0" class="arrow-down"></span>
+                {{ latestPrice.d }} <span [ngClass]="{'text-success': latestPrice.d > 0, 'text-danger': latestPrice.d < 0}">({{ latestPrice.dp }}%)</span>
+              </h4>
+              <p class="text-secondary" *ngIf="latestPrice">{{ latestPrice.t * 1000 | date:'yyyy-MM-dd HH:mm:ss' }}</p>
+            </div>
+            
+            <br>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+          <!-- Buy Modal -->
+          <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+          aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel" *ngIf="metadata">{{ metadata.ticker }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" *ngIf="balance">
+                <div> Current Price: {{ latestPrice.c }} </div>
+                <div> Money in Wallet: ${{ balance.balance }}</div>
+                <form>
+                  <div class="mb-3 d-flex align-items-center">
+                    <label for="quantityInput" class="form-label me-2">Quantity:</label>
+                    <div class="flex-grow-1">
+                      <!-- This will make the input grow to fit the remaining space -->
+                      <input type="number" class="form-control" id="quantityInput" name="quantity" placeholder="0" min="1"
+                        [(ngModel)]="quantity" (input)="checkCost(quantity)">
+                    </div>
+                  </div>
+  
+                  <div *ngIf="notEnoughMoney" class="error-message">Not enough money in wallet!</div>
+                  <!-- Here you can also display the total based on the quantity and price -->
+                </form>
+              </div>
+              <div class="modal-footer d-flex justify-content-between">
+                <div>Total: {{ totalCost }}</div>
+                <button type="button" class="btn btn-primary" [disabled]="quantity === 0 || notEnoughMoney"
+                  data-bs-dismiss="modal" (click)="updateBuy(totalCost,latestPrice.c,quantity)">Buy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Sell Modal -->
+        <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+          aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel" *ngIf="metadata">{{ metadata.ticker }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" *ngIf="balance">
+                <div *ngIf="latestPrice"> Current Price: {{ latestPrice.c }} </div>
+                <div> Money in Wallet: ${{ balance.balance }}</div>
+                <form>
+                  <div class="mb-3 d-flex align-items-center">
+                    <label for="quantityInput" class="form-label me-2">Quantity:</label>
+                    <div class="flex-grow-1">
+                      <!-- This will make the input grow to fit the remaining space -->
+                      <input type="number" class="form-control" id="quantityInput" name="quantity" placeholder="0" min="1"
+                        [(ngModel)]="quantity" (input)="checkCost(quantity)">
+                    </div>
+                  </div>
+  
+                  <div *ngIf="notEnoughMoney" class="error-message">Not enough money in wallet!</div>
+                  <!-- Here you can also display the total based on the quantity and price -->
+                </form>
+              </div>
+              <div class="modal-footer d-flex justify-content-between">
+                <div>Total: {{ totalCost }}</div>
+                <button type="button" class="btn btn-primary" [disabled]="quantity === 0 || notEnoughMoney"
+                  data-bs-dismiss="modal"
+                  (click)="updateSell(totalCost,latestPrice.c,quantity, metadata.ticker)">Sell</button>
+              </div>
+            </div>
+          </div>
+        </div>
+  </div>
+
+<div *ngIf="tickerValid"> 
+  <div  *ngIf="showTabs" class="text-center" style="color: green; margin-bottom: 10px;">Market is Open</div>
+  <ul class="nav nav-tabs nav-fill custom-margin" *ngIf="showTabs">
+  <li class="nav-item">
+    <a class="nav-link" href="#" (click)="selectTab('details', $event)"
+      [class.active]="selectedTab === 'details'">Summary</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#" (click)="selectTab('news', $event)" [class.active]="selectedTab === 'news'">Top
+      News</a>
+  </li>
+  <li class="nav-item" class="flex-grow-1">
+    <a class="nav-link" href="#" (click)="selectTab('charts', $event)"
+      [class.active]="selectedTab === 'charts'">Charts</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#" (click)="selectTab('insights', $event)"
+      [class.active]="selectedTab === 'insights'">Insights</a>
+  </li>
+</ul>
+</div>
+
+
+
+<div class="custom-margin" *ngIf="tickerValid">
+  <div *ngIf="selectedTab === 'details'">
+  <app-details [ticker]="ticker" [cleared]="cleared" (clearSearchEvent)="clearSearch()"></app-details>
+</div>
+<div *ngIf="selectedTab === 'news'">
+  <app-news [ticker]="ticker" (clearSearchEvent)="clearSearch()"></app-news>
+</div>
+<div *ngIf="selectedTab === 'charts'">
+  <app-charts [ticker]="ticker" (clearSearchEvent)="clearSearch()"></app-charts>
+</div>
+<div *ngIf="selectedTab === 'insights'">
+  <app-insights [ticker]="ticker" (clearSearchEvent)="clearSearch()"></app-insights>
+</div>
+</div>
+</div>
+
+</div >
+<footer class="footer fixed-bottom text-black text-center py-3">
+  <div class="container">
+    <span>Powered by <a href="http://www.finnhub.io"> Finnhub.io </a></span>
+  </div>
+</footer>
+

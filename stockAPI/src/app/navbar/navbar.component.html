@@ -1,0 +1,56 @@
+<!-- <div>
+    <nav class="navbar" style="background-color: #2728B3; color: white;">
+        <div class="container-fluid">
+          <a class="navbar-brand" style="color: white;">Stock Search</a>
+          <form class="d-flex" role="search">
+            <button (click)="showSearch()" [class.active]="selectedTab === 'search'" class="nav-link active" aria-current="page" style="margin-left: 10px;">Search</button>
+            <button (click)="showWatchlist()" [class.active]="selectedTab === 'watchlist'" class="nav-link active" aria-current="page" href="#" style="margin-left: 10px;">Watchlist</button>
+            <button (click)="showPortfolio()" [class.active]="selectedTab === 'portfolio'" class="nav-link active" aria-current="page" href="#" style="margin-left: 10px;">Portfolio</button>
+          </form>
+          
+        </div>
+      </nav>
+      <div *ngIf="selectedTab === 'watchlist'">
+        <app-watchlist></app-watchlist>
+    </div>
+    <div [hidden]="selectedTab !== 'search'">
+      <app-search></app-search>
+  </div>
+  <div [hidden]="selectedTab !== 'portfolio'">
+    <app-portfolio></app-portfolio>
+</div>
+</div> -->
+
+<div>
+  <nav class="navbar navbar-expand-lg" style="background-color: #2728B3; color: white;">
+    <div class="container-fluid">
+      <a class="navbar-brand" style="color: white;">Stock Search</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <button (click)="showSearch()" [class.active]="selectedTab === 'search'" class="nav-link" aria-current="page" style="color: white; background: none; border: none; margin-left: 10px;">Search</button>
+          </li>
+          <li class="nav-item">
+            <button (click)="showWatchlist()" [class.active]="selectedTab === 'watchlist'" class="nav-link" style="color: white; background: none; border: none; margin-left: 10px;">Watchlist</button>
+          </li>
+          <li class="nav-item">
+            <button (click)="showPortfolio()" [class.active]="selectedTab === 'portfolio'" class="nav-link" style="color: white; background: none; border: none; margin-left: 10px;">Portfolio</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+  <div *ngIf="selectedTab === 'watchlist'">
+    <app-watchlist></app-watchlist>
+  </div>
+  <div [hidden]="selectedTab !== 'search'">
+    <app-search></app-search>
+  </div>
+  <div [hidden]="selectedTab !== 'portfolio'">
+    <app-portfolio></app-portfolio>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<!-- <div class="dialog-content">
+    <h2 mat-dialog-title> {{ data.ticker }}</h2>
+    <h2 mat-dialog-title>Current Price: {{ data.curPrice }}</h2>
+    <h2 mat-dialog-title>Money In Wallet: {{ money }}</h2>
+    <div mat-dialog-content>
+    <p>Quantity:</p>
+    <mat-form-field>
+        <input matInput type="number" [(ngModel)]="quantity" placeholder="Quantity" min="1" (ngModelChange)="checkCost()">
+      </mat-form-field>
+    
+      <div *ngIf="notEnoughMoney" class="error-message">Not enough money in wallet!</div>
+
+      
+    </div>
+    <div mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button (click)="onBuy()">Buy</button>
+    </div>
+</div> -->
+
+
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Launch static backdrop modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade dialog-content" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{ data.ticker }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h2 mat-dialog-title>Current Price: {{ data.curPrice }}</h2>
+        <h2 mat-dialog-title>Money In Wallet: {{ money }}</h2>
+        <p>Quantity:</p>
+        <mat-form-field>
+            <input matInput type="number" [(ngModel)]="quantity" placeholder="Quantity" min="1" (ngModelChange)="checkCost()">
+          </mat-form-field> 
+        <div *ngIf="notEnoughMoney" class="error-message">Not enough money in wallet!</div>
+      </div>
+      
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+        <button type="button" class="btn btn-primary" (click)="onBuy()">Buy</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.1); /* Optional: if you want to change the border color */
+  }
+  
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+/*   
+  .navbar-toggler-icon::after {
+    content: '\2630';
+    font-size: 1.25rem;
+    color: white;
+  }
+   */
+.nav-link.active {
+    border: 2px solid white !important; /* Ensure the border is applied */
+    background-color: #2728B3 !important; /* Maintain the background color */
+    color: white !important; /* Maintain the text color */
+    border-radius: 10px; /* Adjust the px value to increase or decrease the roundness */
+  }

@@ -1,0 +1,117 @@
+<!-- Loading Spinner -->
+<h1>My Portfolio</h1>
+<div *ngIf="isLoading" class="d-flex justify-content-center large-spinner">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<h2 *ngIf="balance && !isLoading">Money in wallet: ${{ balance.balance }}</h2>
+<div *ngIf="!isLoading && watchlist.length === 0" class="alert alert-warning text-center w-100" role="alert">
+  Currently you don't have any stock in your watchlist.
+</div> 
+
+
+<div *ngFor="let item of watchlist; let i = index" class="card-wrapper">
+<div class="card text-center">
+  <div class="card-header text-start" *ngIf="item.ticker && tickerData[item.ticker] && tickerData[item.ticker].metadata">
+    {{ item.ticker }} {{ tickerData[item.ticker].metadata.name }} 
+  </div>
+  <div class="card-body ">
+    <div class="row">
+      <!-- Left column for Quantity, Avg. Cost/Share, and Total Cost -->
+      <div class="col-md-6 text-start">
+        <div class="mb-2">Quantity: <strong>{{ item.quantity }}</strong></div>
+        <div class="mb-2">Avg. Cost/Share: <strong>{{ item.curPrice }}</strong></div>
+        <div class="mb-2">Total Cost: <strong>{{ item.totalCost }}</strong></div>
+      </div>
+      
+      <!-- Right column for Change, Current Price, and Market Value -->
+      <div class="col-md-6 text-start" *ngIf="item.ticker && tickerData[item.ticker] && tickerData[item.ticker].latestPrice">
+        <div class="mb-2" *ngIf="item.ticker && tickerData[item.ticker] && tickerData[item.ticker].latestPrice">
+          Change: 
+          <span  [ngClass]="{'text-danger': tickerData[item.ticker].latestPrice.d < 0, 'text-success': tickerData[item.ticker].latestPrice.d >= 0}">
+            <!-- Include arrow icon -->
+            <span *ngIf="tickerData[item.ticker].latestPrice.d < 0" class="arrow-down text-danger"></span>
+            <span *ngIf="tickerData[item.ticker].latestPrice.d >= 0" class="arrow-up text-success"></span>
+            {{ tickerData[item.ticker].latestPrice.d  }}
+          </span>
+        </div>
+        <div  class="mb-2">Current Price: <span [ngClass]="{'text-danger': tickerData[item.ticker].latestPrice.d < 0, 'text-success': tickerData[item.ticker].latestPrice.d >= 0}">{{ tickerData[item.ticker].latestPrice.c }}</span></div>
+        <div class="mb-2">Market Value: <span [ngClass]="{'text-danger': tickerData[item.ticker].latestPrice.d < 0, 'text-success': tickerData[item.ticker].latestPrice.d >= 0}"> {{ (tickerData[item.ticker].latestPrice.c * item.quantity) }}</span> </div>
+      </div>
+      
+    </div>
+  </div>
+  <div class="card-footer text-body-secondary text-start">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" [attr.data-bs-target]="'#staticBackdropBuy' + i" (click)="fetchWalletBalance()" style="margin-right: 10px;">
+      Buy
+  </button>
+  <button type="button" class="btn btn-danger" data-bs-toggle="modal" [attr.data-bs-target]="'#staticBackdropSell' + i" (click)="fetchWalletBalance()" style="margin-right: 10px;">
+      Sell
+  </button> 
+  </div>
+</div>
+
+    <!-- Modal -->
+    <div class="modal fade" [id]="'staticBackdropBuy' + i" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+  <div class="modal-content">
+  <div class="modal-header">
+    <h1 class="modal-title fs-5" id="staticBackdropLabel">{{ item.ticker }}</h1>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="resetModalDefaults()"></button>
+  </div>
+  <div class="modal-body" *ngIf="balance && item.ticker && tickerData[item.ticker] && tickerData[item.ticker].latestPrice">
+      <div *ngIf="tickerData[item.ticker].latestPrice"> Current Price: {{ tickerData[item.ticker].latestPrice.c }} </div>
+      <div> Money in Wallet:  ${{ balance.balance }}</div>
+      <form>
+        <div class="mb-3 d-flex align-items-center">
+            <label for="quantityInput" class="form-label me-2">Quantity:</label>
+            <div class="flex-grow-1"> 
+              <input type="number" class="form-control" id="quantityInput" name="quantity" placeholder="0" min="1" [(ngModel)]="quantity" (input)="checkCost(quantity,item.ticker)" >
+            </div>
+          </div>              
+  
+          <div *ngIf="notEnoughMoney" class="error-message" style="color: red;">Not enough money in wallet!</div>           
+      </form>
+    </div>
+    <div class="modal-footer d-flex justify-content-between">
+      <div >Total: {{ totalCost }}</div>
+      <button type="button" class="btn btn-primary" [disabled]="quantity === 0 || notEnoughMoney" data-bs-dismiss="modal" (click)="updateBuy(totalCost,tickerData[item.ticker].latestPrice.c,quantity,item.ticker)">Buy</button>
+    </div>
+</div>
+</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" [id]="'staticBackdropSell' + i" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<h1 class="modal-title fs-5" id="staticBackdropLabel">{{ item.ticker }}</h1>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="resetModalDefaults()"></button>
+</div>
+<div class="modal-body" *ngIf="balance && item.ticker && tickerData[item.ticker]">
+  <div *ngIf="tickerData[item.ticker].latestPrice"> Current Price: {{ tickerData[item.ticker].latestPrice.c }} </div>
+  <div> Money in Wallet:  ${{ balance.balance }}</div>
+  <form>
+    <div class="mb-3 d-flex align-items-center">
+        <label for="quantityInput" class="form-label me-2">Quantity:</label>
+        <div class="flex-grow-1"> 
+          <input type="number" class="form-control" id="quantityInput" name="quantity" placeholder="0" min="1" [(ngModel)]="quantity" (input)="checkQuant(quantity,item.quantity,item.ticker)" >
+        </div>
+      </div>              
+
+      <div *ngIf="notEnoughMoney" class="error-message" style="color: red;">You cannot sell the stocks that you don't have!</div>           
+  </form>
+</div>
+<div class="modal-footer d-flex justify-content-between">
+  <div >Total: {{ totalCost }}</div>
+  <button type="button" class="btn btn-danger" [disabled]="quantity === 0 || notEnoughMoney" data-bs-dismiss="modal" (click)="updateSell(totalCost,tickerData[item.ticker].latestPrice.c,quantity,item.ticker)">Sell</button>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+
+
+

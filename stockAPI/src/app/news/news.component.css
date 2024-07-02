@@ -1,0 +1,37 @@
+@media (min-width: 768px) {
+    .card-img-top {
+      width: 100%; /* Adjust width as needed */
+      height: auto; /* Adjust height as needed */
+      max-height: 100px; /* Adjust max height as needed */
+    }
+  }
+
+  .news-img-container {
+    width: 100%; /* Adjust to control the image width */
+    min-width: 120px; /* Adjust minimum width as needed */
+    height: 80px; /* Fixed height for all images */
+    overflow: hidden; /* Ensures the image doesn't overflow the container */
+  }
+
+  .social-icon {
+    width: 45px;
+    height: 35px;
+    background: transparent;
+    background-color: white;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-body {
+    flex-grow: 1; /* Ensures that the card body takes up the remaining space */
+  }
+  
+  .card-img {
+    height: 120px; /* Fixed height for all images */
+    object-fit: cover; /* Ensures the image covers the area */
+    width: 100%; /* Images take full width of their container */
+  }
+  

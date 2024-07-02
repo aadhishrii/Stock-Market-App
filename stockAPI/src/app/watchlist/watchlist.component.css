@@ -1,0 +1,36 @@
+.card-wrapper {
+    margin: 12px; /* Adjust the margin as needed */
+  }
+ 
+  .card {
+    position: relative;
+  }
+  
+  .btn-light {
+    border: none;
+  }
+  
+  .btn-sm {
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .card-title {
+    font-size: 1.25rem;
+    margin-top: 20px;
+  }
+  
+  .text-end {
+    text-align: right;
+  }
+
+  .large-spinner .spinner-border {
+    width: 3rem;  /* Adjust size as needed */
+    height: 3rem; /* Adjust size as needed */
+    border-width: 0.3rem; /* Adjust border thickness as needed */
+  }
+  
+  

@@ -1,0 +1,21 @@
+/* CSS for button and star when active */
+button.active .star-icon {
+    color: #ffd700; /* Yellow color for active state */
+  }
+  
+  /* Basic button styling */
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 24px; /* Ensuring the text and icon align in size */
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Star icon styling using Unicode */
+  .star-icon {
+    color: #ccc; /* Default color */
+    margin-right: 5px; /* Space between icon and text */
+  }
+  

@@ -1,0 +1,70 @@
+<div class="container">
+    <!-- Insider Sentiments in Table -->
+    <div *ngIf="insider" class="mb-4">
+        <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-md-8"> <!-- Adjust the column size as needed -->
+                <h4 class="text-center"> Insider Sentiments</h4>
+                <table class="table">
+                  <thead>
+                    <tr class="table-header-custom text-center">
+                      <th scope="col">{{ tickerName }}</th>
+                      <th scope="col">MSPR</th>
+                      <th scope="col">Change</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-center">
+                      <td>Total</td>
+                      <td>{{ insider.msprAggregate }}</td>
+                      <td>{{ insider.totalChange }}</td>
+                    </tr>
+                    <tr class="text-center">
+                      <td>Positive</td>
+                      <td>{{ insider.positivemspr }}</td>
+                      <td>{{ insider.positiveChange }}</td>
+                    </tr>
+                    <tr class="text-center">
+                      <td>Negative</td>
+                      <td>{{ insider.negativemspr }}</td>
+                      <td>{{ insider.negativeChange }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          
+    </div>
+
+    <!-- msprAggregate
+: 
+"-3762.8"
+negativeChange
+: 
+-43656459
+negativemspr
+: 
+"-6396.71"
+positiveChange
+: 
+13897563
+positivemspr
+: 
+"2633.92"
+totalChange
+: 
+-29758896 -->
+
+    <!-- Recommendation Trends and Historical EPS Surprises in Grid -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div id="container" *ngIf="chartOptions" style="height: 400px;"></div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div id="earningsChartContainer" *ngIf="earningsChartOptions" style="height: 400px;"></div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,80 @@
+<!-- news.component.html -->
+
+<!-- Cards Container -->
+<div *ngIf="news && news.length > 0" class="container my-3">
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+      <!-- News Cards -->
+      <div *ngFor="let item of news; let i = index" class="col">
+        <!-- Clickable Card -->
+        <div class="card mb-4 h-78" data-bs-toggle="modal" [attr.data-bs-target]="'#staticBackdrop' + i">
+          <div class="row g-0">
+            <div class="col-md-4 d-flex align-items-center justify-content-center p-2">
+              <img [src]="item[1].image" class="img-fluid card-img" alt="image">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <div>{{ item[1].headline }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+<!-- No News Available -->
+<div *ngIf="!news || news.length === 0" class="container my-3">
+    <p>No news available.</p>
+</div>
+
+<!-- Modals for Each News Item -->
+<div *ngFor="let item of news; let i = index">
+    <div class="modal fade" [id]="'staticBackdrop' + i" tabindex="-1" aria-labelledby="'staticBackdropLabel' + i" aria-hidden="true">
+        <div class="modal-dialog col-10 col-sm-8 col-md-6 col-lg-4">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" [id]="'newsModalLabel' + i">{{ item[1].source }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <h4> {{ item[1].headline }}</h4>
+                    <p>{{ item[1].summary }}</p>
+                    <div> For more details click <a href='{{ item[1].url }}'>here</a></div>
+                </div>
+                <!-- Modal Footer -->
+                <div class="modal-footer justify-content-between">
+                    <div>
+                        <!-- Social Share Icons -->
+                        Share
+                        <br>
+                        <a href="#" (click)="shareOnTwitter(item[1].url, item[1].headline)">
+                            <img src="../../assets/images/twitter.png" alt="Share on Twitter" class="social-icon" />
+                          </a>
+                          <a href="#" (click)="shareOnFacebook(item[1].url)">
+                            <img src="../../assets/images/facebook.png" alt="Share on Facebook" class="social-icon" />
+                          </a>
+                        <!-- <a href="#" (click)="shareOnFacebook(item[1].url)">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" (click)="shareOnTwitter(item[1].url, item[1].headline)">
+                            <i class="fas fa-times"></i>
+                        </a> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
